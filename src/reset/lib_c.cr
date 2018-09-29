@@ -12,6 +12,7 @@ lib LibC
   fun fdopen(fd : Int32, mode : Char*) : Void*
   fun getline(s : Char**, size : SizeT*, fd : Void*) : Int32
   fun perror(s : Char*)
+  fun strncmp(s : Char*, cmp : Char*, n : SizeT) : Int32
 
   fun rand : Int32
   fun rand_r(seedp : UInt32*) : Int32

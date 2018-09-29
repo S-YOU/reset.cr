@@ -122,13 +122,6 @@ struct Slice(T)
   @[AlwaysInline]
   # :nodoc:
   def []=(index : Int, value : T)
-    check_writable
-
-    index += size if index < 0
-    unless 0 <= index < size
-      raise "IndexError"
-    end
-
     @pointer[index] = value
   end
 
@@ -244,10 +237,10 @@ struct Pointer(T)
     (self + offset).value = value
   end
 
-  # @[AlwaysInline]
-  # def []=(offset, value : Char)
-  #   (self + offset).value = value.ord.to_u8
-  # end
+  @[AlwaysInline]
+  def []=(offset, value : Char)
+    (self + offset).value = value.ord.to_u8
+  end
 
   # @[AlwaysInline]
   # def []=(offset, value : UInt8)
@@ -880,6 +873,14 @@ end
 macro read_file(file, buf, size)
   %fd = open({{file}})
   ret = read(%fd, {{buf}}, {{size}})
+  close(%fd)
+  ret
+end
+
+# write file to buffer
+macro write_file(file, buf, size)
+  %fd = open({{file}}, LibC::O_CREAT | LibC::O_TRUNC | LibC::O_WRONLY)
+  ret = write(%fd, {{buf}}, {{size}})
   close(%fd)
   ret
 end

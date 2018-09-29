@@ -285,6 +285,10 @@ def sprintf(format : String, args : Float64) : String
   String.new(buf.to_slice)
 end
 
+macro sprintf(buf, format, *args)
+  LibC.sprintf({{buf}}, {{format}}, {{*args}})
+end
+
 macro abort(message, status = 1)
   LibC.puts({{message}})
   LibC.exit({{status}})
